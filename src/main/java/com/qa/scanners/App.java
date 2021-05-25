@@ -72,6 +72,11 @@ public class App
                 num1 = stack.pop();
                 stack.push(num1 / num2);
                 break;
+            case "^":
+                num2 = stack.pop();
+                num1 = stack.pop();
+                stack.push(Math.pow(num1, num2));
+                break;
             case "swap":
                 num1 = stack.pop();
                 num2 = stack.pop();

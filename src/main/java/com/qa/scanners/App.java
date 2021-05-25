@@ -1,6 +1,7 @@
 package com.qa.scanners;
 
 import java.util.Scanner;
+import java.util.NoSuchElementException;
 import java.util.Stack;
 
 /**
@@ -22,12 +23,24 @@ public class App
         Stack<Double> stack = new Stack<Double>();
         boolean running = true;
         while (running) {
-            String line = scanner.nextLine();
+            String line = "";
+
+            try {
+                line = scanner.nextLine();
+            } catch(NoSuchElementException e) {
+                running = false;
+                break;
+            }
+
             String[] parts = line.split("\\s+");
             for (String part: parts) {
-                if (!runPart(stack, part)) {
-                    running = false;
-                    break;
+                try {
+                    if (!runPart(stack, part)) {
+                        running = false;
+                        break;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println(part + " is not a number");
                 }
             }
             System.out.println(stack);
@@ -38,8 +51,8 @@ public class App
 
     public static boolean runPart(Stack<Double> stack, String part)
     {
-        Double num2;
         Double num1;
+        Double num2;
         switch (part) {
             case "":
                 break;
@@ -58,6 +71,22 @@ public class App
                 num2 = stack.pop();
                 num1 = stack.pop();
                 stack.push(num1 / num2);
+                break;
+            case "swap":
+                num1 = stack.pop();
+                num2 = stack.pop();
+                stack.push(num1);
+                stack.push(num2);
+                break;
+            case "dup":
+                num1 = stack.peek();
+                stack.push(num1);
+                break;
+            case "drop":
+                stack.pop();
+                break;
+            case "clear":
+                stack.clear();
                 break;
             case "exit":
                 return false;
